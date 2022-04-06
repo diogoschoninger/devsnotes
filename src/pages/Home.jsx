@@ -1,8 +1,21 @@
 import { useState, useEffect } from "react";
 
 export function Home() {
-  const [error, setError] = useState(null);
-  const [notes, setNotes] = useState(null);
+  const [data, setData] = useState({});
+
+  async function getNotes() {
+    await fetch("http://localhost/devsnotes/api/getall.php")
+    .then(resp => resp.json())
+    .then(resp => {
+      if (resp.error !== "") setData({error: resp.error})
+      else setData(resp.result);
+    })
+    .catch(() => setData({error: "Não foi possível conectar à API. Tente novamente."}));
+  }
+
+  useEffect(() => {
+    getNotes();
+  }, []);
 
   return (
     <table>
@@ -14,9 +27,8 @@ export function Home() {
         </tr>
       </thead>
       <tbody>
-        {error ? <tr><td>{error}</td></tr> : ""}
-
-        {notes.map(note => (
+        {data.error ? <tr><td colSpan="3">{data.error}</td></tr> : null}
+        {Object.values(data).map(note => (
           <tr key={note.id}>
             <td>{note.id}</td>
             <td>{note.title}</td>
