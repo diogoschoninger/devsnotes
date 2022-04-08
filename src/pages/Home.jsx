@@ -2,16 +2,21 @@ import { useState, useEffect } from "react";
 import "../styles/Home.css";
 
 export function Home() {
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
 
   async function getNotes() {
-    await fetch("http://localhost/devsnotes/api/getall.php")
+    await fetch("http://localhost/devsnotes/api/getall.php", {method: "GET"})
     .then(resp => resp.json())
     .then(resp => {
       if (resp.error !== "") setData({error: resp.error})
       else setData(resp.result);
+      setLoading(false);
     })
-    .catch(() => setData({error: "Não foi possível conectar à API. Tente novamente."}));
+    .catch(() => {
+      setData({error: "Não foi possível conectar à API. Tente novamente."});
+      setLoading(false);
+    });
   }
 
   useEffect(() => {
@@ -43,18 +48,19 @@ export function Home() {
               </tr>
             </thead>
             <tbody>
-              {data.error ? <tr><td colSpan="3">{data.error}</td></tr> : null}
-              {Object.values(data).map(note => (
+              {loading ? <tr><td colSpan="4" className="text-center">Carregando...</td></tr> : null}
+              {data.error ? <tr><td colSpan="4" className="text-center">{data.error}</td></tr> : null}
+              {!data.error ? Object.values(data).map(note => (
                 <tr key={note.id}>
                   <th scope="row">{note.id}</th>
                   <td>{note.title}</td>
                   <td>{note.body}</td>
                   <td>
-                    <button className="btn btn-sm py-0 btn-warning">Editar</button>
+                    <a href={"/edit/" + note.id}><button className="btn btn-sm py-0 btn-warning me-1">Editar</button></a>
                     <button className="btn btn-sm py-0 btn-danger">Excluir</button>
                   </td>
                 </tr>
-              ))}
+              )) : null}
             </tbody>
           </table>
         </div>
