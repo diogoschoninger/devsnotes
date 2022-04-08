@@ -2,7 +2,8 @@
 require "./config.php";
 
 if ($method === "PUT") {
-  parse_str(file_get_contents("php://input"), $input);
+  $dados = file_get_contents("php://input");
+  $input = json_decode($dados, true);
 
   $id = $input["id"] ?? null;
   $title = $input["title"] ?? null;

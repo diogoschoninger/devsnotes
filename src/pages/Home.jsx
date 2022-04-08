@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../styles/Home.css";
+import "../styles/Global.css";
 
 export function Home() {
   const [loading, setLoading] = useState(true);

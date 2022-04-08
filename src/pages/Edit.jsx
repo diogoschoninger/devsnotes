@@ -1,32 +1,49 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import "../styles/Global.css";
 
 export function Edit() {
-  const idNote = useParams().id;
+  const id = useParams().id;
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [result, setResult] = useState({});
+  
+  const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState(false);
+  const [data, setData] = useState({});
 
   async function getNote() {
-    await fetch("http://localhost/devsnotes/api/get.php?id=" + idNote, {method: "GET"})
+    await fetch("http://localhost/devsnotes/api/get.php?id=" + id, {method: "GET"})
     .then(resp => resp.json())
     .then(resp => {
-      if (resp.error !== "") {
-        setResult({error: resp.result});
-        console.log(resp.error);
-      } else {
+      if (resp.error !== "") setData({error: resp.error});
+      else {
         setTitle(resp.result.title);
         setBody(resp.result.body);
-        console.log(result);
       }
+      setLoading(false);
     })
     .catch(() => {
-      setResult({error: "Não foi possível conectar à API. Tente novamente"});
+      setData({error: "Não foi possível conectar à API. Tente novamente."});
+      setLoading(false);
     });
   }
   
-  function editNote() {
-
+  async function editNote(e) {
+    e.preventDefault();
+    setLoading(true);
+    await fetch(`http://localhost/devsnotes/api/update.php`, {
+      method: "PUT",
+      body: JSON.stringify({id, title, body})
+    })
+    .then(resp => resp.json())
+    .then(resp => {
+      setSuccess(true);
+      setLoading(false);
+    })
+    .catch(() => {
+      setData({error: "Não foi possível conectar à API. Tente novamente."});
+      setLoading(false);  
+    })
   }
 
   useEffect(() => {
@@ -47,19 +64,33 @@ export function Edit() {
       </div>
       <div className="content">
         <div className="container">
-          <form onSubmit={editNote()}>
-            <div className="mb-3">
-              <label className="form-label mb-1">Título da anotação</label>
-              <input className="form-control" value={title} onChange={e => setTitle(e.target.value)}></input>
-            </div>
-            <div className="mb-3">
-              <label className="form-label mb-1">Descrição da anotação</label>
-              <textarea className="form-control" value={body} onChange={e => setBody(e.target.value)}></textarea>
-            </div>
-            <div className="d-grid">
-              <button type="submit" className="btn btn-sm btn-primary">Editar</button>
-            </div>
-          </form>
+          {loading ? <div className="alert my-3 alert-secondary">Carregando...</div> : null}
+
+          {success ? 
+            <div className="alert my-3 alert-success alert-dismissible fade show">
+              Anotação editada com sucesso!
+              <button class="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={() => setSuccess(false)}></button>
+            </div> : null}
+          
+          {data.error || loading ?
+            <div className="alert my-3 alert-secondary alert-dismissible fade show">
+              {data.error}
+              <Link to="/"><button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></Link>
+            </div> : 
+            <form onSubmit={editNote}>
+              <div className="mb-3">
+                <label className="form-label mb-1">Título da anotação</label>
+                <input className="form-control" value={title} onChange={e => setTitle(e.target.value)}></input>
+              </div>
+              <div className="mb-3">
+                <label className="form-label mb-1">Descrição da anotação</label>
+                <textarea className="form-control" value={body} onChange={e => setBody(e.target.value)}></textarea>
+              </div>
+              <div className="d-grid">
+                <button type="submit" className="btn btn-sm btn-primary">Editar</button>
+              </div>
+            </form>
+          }
         </div>
       </div>
     </div>
