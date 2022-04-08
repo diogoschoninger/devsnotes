@@ -14,7 +14,10 @@ export function Register() {
     setLoading(true);
     await fetch(`http://localhost/devsnotes/api/insert.php`, {
       method: "POST",
-      body: JSON.stringify({title, body})
+      body: new URLSearchParams({
+        title: title,
+        body: body
+      })
     })
     .then(resp => resp.json())
     .then(resp => {

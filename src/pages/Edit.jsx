@@ -69,13 +69,13 @@ export function Edit() {
           {success ? 
             <div className="alert my-3 alert-success alert-dismissible fade show">
               Anotação editada com sucesso!
-              <button class="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={() => setSuccess(false)}></button>
+              <button className="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={() => setSuccess(false)}></button>
             </div> : null}
           
           {data.error || loading ?
             <div className="alert my-3 alert-secondary alert-dismissible fade show">
               {data.error}
-              <Link to="/"><button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></Link>
+              <Link to="/"><button className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></Link>
             </div> : 
             <form onSubmit={editNote}>
               <h1 className="mb-3">Editar anotação</h1>

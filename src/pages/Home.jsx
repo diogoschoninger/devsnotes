@@ -41,10 +41,10 @@ export function Home() {
             <caption>Listagem de anotações</caption>
             <thead>
               <tr>
-                <th scope="col" className="p-1 align-middle">ID</th>
-                <th scope="col" className="p-1 align-middle">Título</th>
-                <th scope="col" className="p-1 align-middle">Descrição</th>
-                <th scope="col" className="p-1 align-middle">Ações</th>
+                <th className="p-1 align-middle">ID</th>
+                <th className="col-3 p-1 align-middle">Título</th>
+                <th className="p-1 align-middle">Descrição</th>
+                <th className="col-2 p-1 align-middle">Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -56,8 +56,8 @@ export function Home() {
                   <td>{note.title}</td>
                   <td>{note.body}</td>
                   <td>
-                    <a href={"/edit/" + note.id}><button className="btn btn-sm py-0 btn-warning me-1">Editar</button></a>
-                    <button className="btn btn-sm py-0 btn-danger">Excluir</button>
+                    <a href={"/edit/" + note.id} className="btn btn-sm py-0 btn-warning">Editar</a>
+                    <button className="btn btn-sm py-0 btn-danger ms-1">Excluir</button>
                   </td>
                 </tr>
               )) : null}

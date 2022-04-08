@@ -2,8 +2,8 @@
 require "./config.php";
 
 if ($method === "POST") {
-  $title = filter_input(INPUT_POST, "title");
-  $body = filter_input(INPUT_POST, "body");
+  $title = $_POST["title"];
+  $body = $_POST["body"];
 
   if ($title && $body) {
     $sql = $pdo->prepare("INSERT INTO notes (title, body) VALUES (:title, :body)");
