@@ -1,44 +1,30 @@
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import "../styles/Global.css";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
-export function Edit() {
-  const id = useParams().id;
+export function Register() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [data, setData] = useState({});
 
-  async function getNote() {
-    await fetch("http://localhost/devsnotes/api/get.php?id=" + id, {method: "GET"})
-    .then(resp => resp.json())
-    .then(resp => {
-      if (resp.error !== "") setData({error: resp.error});
-      else {
-        setTitle(resp.result.title);
-        setBody(resp.result.body);
-      }
-      setLoading(false);
-    })
-    .catch(() => {
-      setData({error: "Não foi possível conectar à API. Tente novamente."});
-      setLoading(false);
-    });
-  }
-  
-  async function editNote(e) {
+  async function registerNote(e) {
     e.preventDefault();
     setLoading(true);
-    await fetch(`http://localhost/devsnotes/api/update.php`, {
-      method: "PUT",
-      body: JSON.stringify({id, title, body})
+    await fetch(`http://localhost/devsnotes/api/insert.php`, {
+      method: "POST",
+      body: JSON.stringify({title, body})
     })
     .then(resp => resp.json())
     .then(resp => {
-      setSuccess(true);
-      setLoading(false);
+      if (resp.error !== "") {
+        setData({error: resp.error});
+        setLoading(false);
+      } else {
+        setSuccess(true);
+        setLoading(false);
+      }
     })
     .catch(() => {
       setData({error: "Não foi possível conectar à API. Tente novamente."});
@@ -46,9 +32,11 @@ export function Edit() {
     })
   }
 
-  useEffect(() => {
-    getNote();
-  }, []);
+  function cleanInputs() {
+    setTitle("");
+    setBody("");
+    setSuccess(false);
+  }
 
   return (
     <div className="window">
@@ -68,17 +56,18 @@ export function Edit() {
 
           {success ? 
             <div className="alert my-3 alert-success alert-dismissible fade show">
-              Anotação editada com sucesso!
-              <button class="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={() => setSuccess(false)}></button>
+              Anotação cadastrada com sucesso!
+              <button className="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={cleanInputs}></button>
             </div> : null}
-          
+
           {data.error || loading ?
             <div className="alert my-3 alert-secondary alert-dismissible fade show">
               {data.error}
-              <Link to="/"><button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></Link>
-            </div> : 
-            <form onSubmit={editNote}>
-              <h1 className="mb-3">Editar anotação</h1>
+              {/* ARRUMAR O BOTÃO DE ERRO PARA DAR REFRESH */}
+              <Link to="/"><button className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></Link>
+            </div> :
+              <form onSubmit={registerNote}>
+              <h1 className="mb-3">Cadastrar nova anotação</h1>
               <div className="mb-3">
                 <label className="form-label mb-1">Título da anotação</label>
                 <input className="form-control" value={title} onChange={e => setTitle(e.target.value)}></input>
@@ -88,7 +77,7 @@ export function Edit() {
                 <textarea className="form-control" value={body} onChange={e => setBody(e.target.value)}></textarea>
               </div>
               <div className="d-grid">
-                <button type="submit" className="btn btn-sm btn-primary">Editar</button>
+                <button type="submit" className="btn btn-sm btn-success">Cadastrar</button>
               </div>
             </form>
           }

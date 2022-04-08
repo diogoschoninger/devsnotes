@@ -31,11 +31,11 @@ export function Home() {
             <a href="/" className="nav-link p-0 text-dark"><i className="bi-card-list me-2"></i>Listagem</a>
           </li>
           <li className="nav-item p-1 px-2 mb-1">
-            <a href="/" className="nav-link p-0 text-dark"><i className="bi-pen me-2"></i>Cadastro</a>
+            <a href="/register" className="nav-link p-0 text-dark"><i className="bi-pen me-2"></i>Cadastro</a>
           </li>
         </ul>
       </div>
-      <div className="content">
+      <div className="content pt-3">
         <div className="container">
           <table className="table table-hover table-striped table-sm caption-top">
             <caption>Listagem de anotações</caption>
