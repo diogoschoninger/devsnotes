@@ -64,16 +64,16 @@ export function Edit() {
       </div>
       <div className="content pt-3">
         <div className="container">
-          {loading ? <div className="alert my-3 alert-secondary">Carregando...</div> : null}
+          {loading ? <div className="alert mb-3 alert-secondary">Carregando...</div> : null}
 
           {success ? 
-            <div className="alert my-3 alert-success alert-dismissible fade show">
+            <div className="alert mb-3 alert-success alert-dismissible fade show">
               Anotação editada com sucesso!
               <button className="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={() => setSuccess(false)}></button>
             </div> : null}
           
           {data.error || loading ?
-            <div className="alert my-3 alert-secondary alert-dismissible fade show">
+            <div className="alert mb-3 alert-secondary alert-dismissible fade show">
               {data.error}
               <Link to="/"><button className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></Link>
             </div> : 
