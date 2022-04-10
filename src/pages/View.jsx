@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar";
-import "../styles/Global.css";
+import "../styles/Global.scss";
 
 export function View() {
   const [loading, setLoading] = useState(true);

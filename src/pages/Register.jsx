@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Sidebar } from "../components/Sidebar";
-import "../styles/Global.css";
+import "../styles/Global.scss";
 
 export function Register() {
   const [loading, setLoading] = useState(false);

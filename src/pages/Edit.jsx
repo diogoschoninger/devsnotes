@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar";
-import "../styles/Global.css";
+import "../styles/Global.scss";
 
 export function Edit() {
   const [loading, setLoading] = useState(true);
