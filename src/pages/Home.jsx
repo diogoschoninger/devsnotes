@@ -105,7 +105,7 @@ export function Home() {
                     <td>
                       <Link to={"/edit/" + note.id} className="btn btn-sm py-0 btn-warning">Editar</Link>
 
-                      <button className="btn btn-sm py-0 btn-danger ms-1" onClick={() => deleteNote()}>Excluir</button>
+                      <button className="btn btn-sm py-0 btn-danger ms-1" onClick={() => deleteNote(note.id)}>Excluir</button>
                     </td>
                   </tr>
                 )) : null }
