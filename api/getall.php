@@ -3,6 +3,7 @@ require "./config.php";
 
 if ($method === "GET") {
   $sql = $pdo->query("SELECT * FROM notes");
+  
   if ($sql->rowCount() > 0) {
     $data = $sql->fetchAll(PDO::FETCH_ASSOC);
 

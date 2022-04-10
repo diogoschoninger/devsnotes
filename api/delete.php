@@ -2,7 +2,7 @@
 require "./config.php";
 
 if ($method === "POST") {
-  $id = $_POST["id"] ?? null;
+  $id = filter_input(INPUT_POST, "id") ?? null;
 
   if ($id) {
     $sql = $pdo->prepare("SELECT * FROM notes WHERE id = :id");
@@ -14,7 +14,11 @@ if ($method === "POST") {
       $sql->bindValue(":id", $id);
       $sql->execute();
 
-      $array["result"] = "Nota excluída com sucesso!";
+      if ($sql->rowCount() > 0) {
+        $array["result"] = "Nota excluída com sucesso!";
+      } else {
+        $array["error"] = "Erro ao excluir a anotação. Tente novamente.";
+      }
     } else {
       $array["error"] = "ID inexistente";
     }

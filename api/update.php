@@ -1,17 +1,10 @@
 <?php
 require "./config.php";
 
-if ($method === "PUT") {
-  $dados = file_get_contents("php://input");
-  $input = json_decode($dados, true);
-
-  $id = $input["id"] ?? null;
-  $title = $input["title"] ?? null;
-  $body = $input["body"] ?? null;
-
-  $id = filter_var($id);
-  $title = filter_var($title);
-  $body = filter_var($body);
+if ($method === "POST") {
+  $id = filter_input(INPUT_POST, "id") ?? null;
+  $title = filter_input(INPUT_POST, "title") ?? null;
+  $body = filter_input(INPUT_POST, "body") ?? null;
 
   if ($id && $title && $body) {
     $sql = $pdo->prepare("SELECT * FROM notes WHERE id = :id");
@@ -19,7 +12,6 @@ if ($method === "PUT") {
     $sql->execute();
 
     if ($sql->rowCount() > 0) {
-      
       $sql = $pdo->prepare("UPDATE notes SET title = :title, body = :body WHERE id = :id");
 
       $sql->bindValue(":id", $id);
@@ -28,12 +20,9 @@ if ($method === "PUT") {
 
       $sql->execute();
 
-      $array["result"] = [
-        "id" => $id,
-        "title" => $title,
-        "body" => $body
-      ];
-
+      if ($sql->rowCount() === 1) $array["result"] = "Anotação editada com sucesso!";
+      else if ($sql->rowCount() === 0) $array["result"] = "Não houveram alterações.";
+      else $array["error"] = "Erro ao editar anotação. Tente novamente.";
     } else {
       $array["error"] = "ID inexistente";
     }

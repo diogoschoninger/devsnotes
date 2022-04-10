@@ -10,7 +10,9 @@ export function Home() {
   const [result, setResult] = useState(false);
 
   async function getNotes() {
-    await fetch("http://localhost/devsnotes/api/getall.php", {method: "GET"})
+    await fetch("http://localhost/devsnotes/api/getall.php", {
+      method: "GET"
+    })
     .then(resp => resp.json())
     .then(resp => {
       if (resp.error !== "") setError(resp.error);
@@ -35,8 +37,9 @@ export function Home() {
     })
     .then(resp => resp.json())
     .then(resp => {
-      setSuccess({text: resp.result});
-      setResult(null);
+      if (resp.error !== "") setError(resp.error);
+      else setSuccess(resp.result);
+      setLoading(false);
     })
     .catch(() => {
       setError("Não foi possível conectar à API. Tente novamente.");
@@ -51,18 +54,28 @@ export function Home() {
   return (
     <div className="window">
       <Sidebar/>
-      <div className="content pt-3">
+      <div className="content pt-3 mb-3">
         <div className="container">
-          {success ? 
-            <div className="alert alert-success alert-dismissible fade show">
-              {success.text}
-              <Link to="/">
+          {loading ?
+            <div className="alert mb-3 alert-secondary">Carregando...</div> : null }
+
+          {error ?
+            <div className="alert mb-3 alert-danger alert-dismissible fade show">
+              {error}
+              <a href="/">
                 <button className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </Link>
+              </a>
+            </div> : null }
+
+          {success ? 
+            <div className="alert mb-3 alert-success alert-dismissible fade show">
+              {success}
+              <a href="/">
+                <button className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </a>
             </div>
-          :
+          : loading || error ? null :
             <table className="table table-hover table-striped table-sm caption-top">
-              <caption>Listagem de anotações</caption>
               <thead>
                 <tr>
                   <th className="p-1 align-middle">ID</th>
@@ -72,13 +85,9 @@ export function Home() {
                 </tr>
               </thead>
               <tbody>
-                {loading ? <tr><td colSpan="4" className="text-center">Carregando...</td></tr> : null}
-
-                {error ? <tr><td colSpan="4" className="text-center">{error}</td></tr> : null}
-
                 {result ? Object.values(result).map(note => (
                   <tr key={note.id}>
-                    <th scope="row">
+                    <th scope="row" className="text-center">
                       <Link to={"/view/" + note.id} className="nav-link p-0 text-dark">
                         {note.id}
                       </Link>
@@ -95,7 +104,8 @@ export function Home() {
                     </td>
                     <td>
                       <Link to={"/edit/" + note.id} className="btn btn-sm py-0 btn-warning">Editar</Link>
-                      <button className="btn btn-sm py-0 btn-danger ms-1" onClick={() => deleteNote(note.id)}>Excluir</button>
+
+                      <button className="btn btn-sm py-0 btn-danger ms-1" onClick={() => deleteNote()}>Excluir</button>
                     </td>
                   </tr>
                 )) : null }

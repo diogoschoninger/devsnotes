@@ -2,7 +2,7 @@
 require "./config.php";
 
 if ($method === "GET") {
-  $id = filter_input(INPUT_GET, "id");
+  $id = filter_input(INPUT_GET, "id") ?? null;
 
   if ($id) {
     $sql = $pdo->prepare("SELECT * FROM notes WHERE id = :id");

@@ -2,8 +2,8 @@
 require "./config.php";
 
 if ($method === "POST") {
-  $title = $_POST["title"];
-  $body = $_POST["body"];
+  $title = filter_input(INPUT_POST, "title") ?? null;
+  $body = filter_input(INPUT_POST, "body") ?? null;
 
   if ($title && $body) {
     $sql = $pdo->prepare("INSERT INTO notes (title, body) VALUES (:title, :body)");
@@ -11,15 +11,10 @@ if ($method === "POST") {
     $sql->bindValue(":body", $body);
     $sql->execute();
 
-    $id = $pdo->lastInsertId();
-
-    $array["result"] = [
-      "id" => $id,
-      "title" => $title,
-      "body" => $body
-    ];
+    if ($sql->rowCount() !== 1) $array["error"] = "Erro ao cadastrar a anotação. Tente novamente.";
+    else $array["result"] = "Anotação cadastrada com sucesso!";
   } else {
-    $array["error"] = "Parâmetros não enviados. Necessário 'body' e 'title'";
+    $array["error"] = "Parâmetros não enviados. Necessário 'title' e 'body'";
   }
 } else {
   $array["error"] = "Método $method não permitido! (apenas POST)";
