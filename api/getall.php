@@ -13,6 +13,8 @@ if ($method === "GET") {
         "body" => $item["body"]
       ];
     }
+  } else {
+    $array["error"] = "Nenhuma anotação cadastrada";
   }
 } else {
   $array["error"] = "Método $method não permitido! (apenas GET)";

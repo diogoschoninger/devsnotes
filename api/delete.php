@@ -1,12 +1,8 @@
 <?php
 require "./config.php";
 
-if ($method === "DELETE") {
-  parse_str(file_get_contents("php://input"), $input);
-
-  $id = $input["id"] ?? null;
-
-  $id = filter_var($id);
+if ($method === "POST") {
+  $id = $_POST["id"] ?? null;
 
   if ($id) {
     $sql = $pdo->prepare("SELECT * FROM notes WHERE id = :id");
@@ -26,7 +22,7 @@ if ($method === "DELETE") {
     $array["error"] = "ID não enviado";
   }
 } else {
-  $array["error"] = "Método $method não permitido! (apenas DELETE)";
+  $array["error"] = "Método $method não permitido! (apenas POST)";
 }
 
 require "./return.php";

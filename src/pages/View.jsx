@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import "../styles/Global.css";
 
-export function Edit() {
+export function View() {
   const id = useParams().id;
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   
   const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(false);
   const [data, setData] = useState({});
 
   async function getNote() {
@@ -26,24 +25,6 @@ export function Edit() {
       setData({error: "Não foi possível conectar à API. Tente novamente."});
       setLoading(false);
     });
-  }
-  
-  async function editNote(e) {
-    e.preventDefault();
-    setLoading(true);
-    await fetch(`http://localhost/devsnotes/api/update.php`, {
-      method: "PUT",
-      body: JSON.stringify({id, title, body})
-    })
-    .then(resp => resp.json())
-    .then(resp => {
-      setSuccess(true);
-      setLoading(false);
-    })
-    .catch(() => {
-      setData({error: "Não foi possível conectar à API. Tente novamente."});
-      setLoading(false);  
-    })
   }
 
   useEffect(() => {
@@ -65,33 +46,23 @@ export function Edit() {
       <div className="content pt-3">
         <div className="container">
           {loading ? <div className="alert mb-3 alert-secondary">Carregando...</div> : null}
-
-          {success ? 
-            <div className="alert mb-3 alert-success alert-dismissible fade show">
-              Anotação editada com sucesso!
-              <button className="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={() => setSuccess(false)}></button>
-            </div> : null
-          }
           
           {data.error || loading ?
             <div className="alert mb-3 alert-secondary alert-dismissible fade show">
               {data.error}
               <Link to="/"><button className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></Link>
             </div> : 
-            <form onSubmit={editNote}>
-              <h1 className="mb-3">Editar anotação</h1>
+            <div>
+              <h1 className="mb-3">Visualizar anotação</h1>
               <div className="mb-3">
                 <label className="form-label mb-1">Título da anotação</label>
-                <input className="form-control" value={title} onChange={e => setTitle(e.target.value)}></input>
+                <input className="form-control" disabled value={title}></input>
               </div>
               <div className="mb-3">
                 <label className="form-label mb-1">Descrição da anotação</label>
-                <textarea className="form-control" value={body} onChange={e => setBody(e.target.value)}></textarea>
+                <textarea className="form-control" disabled value={body} style={{height: "250px"}}></textarea>
               </div>
-              <div className="d-grid">
-                <button type="submit" className="btn btn-sm btn-primary">Editar</button>
-              </div>
-            </form>
+            </div>
           }
         </div>
       </div>

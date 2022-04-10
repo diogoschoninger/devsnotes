@@ -61,13 +61,16 @@ export function Register() {
             <div className="alert my-3 alert-success alert-dismissible fade show">
               Anotação cadastrada com sucesso!
               <button className="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={cleanInputs}></button>
-            </div> : null}
+            </div>
+          : null}
 
-          {data.error || loading ?
+          {data.error ?
             <div className="alert my-3 alert-secondary alert-dismissible fade show">
               {data.error}
               {/* ARRUMAR O BOTÃO DE ERRO PARA DAR REFRESH */}
-              <Link to="/"><button className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></Link>
+              <Link to="/">
+                <button className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </Link>
             </div> :
               <form onSubmit={registerNote}>
               <h1 className="mb-3">Cadastrar nova anotação</h1>
