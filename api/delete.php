@@ -15,7 +15,7 @@ if ($method === "POST") {
       $sql->execute();
 
       if ($sql->rowCount() > 0) {
-        $array["result"] = "Nota excluída com sucesso!";
+        $array["result"] = "Anotação excluída com sucesso!";
       } else {
         $array["error"] = "Erro ao excluir a anotação. Tente novamente.";
       }
